@@ -11,7 +11,6 @@ import { Application, helpers, Router } from "https://deno.land/x/oak/mod.ts";
 import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
 const PORT = 18412;
-const ALLOWEDTYPES = "\\.ttf\\|\\.otf";
 const VERSION = 17;
 
 // interfaces
@@ -42,7 +41,7 @@ const cmd = Deno.run({
   cmd: [
     "bash",
     "-c",
-    `fc-list --format '%{file}|%{family[0]}|%{weight}|%{style[0]}|%{postscriptname}\\n' | sort | grep -e ${ALLOWEDTYPES}`,
+    "fc-list --format '%{file}|%{family[0]}|%{weight}|%{style[0]}|%{postscriptname}\\n' | sort | grep -e '\\.ttf\\|\\.otf'",
   ],
   stdout: "piped",
   stderr: "piped",
@@ -76,11 +75,13 @@ const router = new Router();
 router
   // url used by figma to get a list of all available fonts, called when a project is open
   .get("/figma/font-files", (context) => {
+    console.log("retrieving font list");
     context.response.headers.set("Content-Type", "application/json");
     context.response.body = JSON.stringify(response);
   })
   // when the user selects a font, figma call this url to download the font as an octet-stream
   .get("/figma/font-file", async (context) => {
+    console.log("retrieving font file");
     const file: string = helpers.getQuery(context).file;
     context.response.headers.set("Content-Type", "application/json");
     if (response.fontFiles[file] != null) {
@@ -102,5 +103,6 @@ app.use(
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+console.log("server starting");
 // starts server
 await app.listen(`127.0.0.1:${PORT}`);

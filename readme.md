@@ -6,6 +6,12 @@
 
 Just have [Deno](https://github.com/denoland/deno) installed.
 
+## Run remotely
+
+```bash
+deno run --allow-read --allow-run --allow-net https://raw.githubusercontent.com/castroclucas/figma-font-helper-deno/main/main.ts
+```
+## OR
 ## Install
 
 ```bash
