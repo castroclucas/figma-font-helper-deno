@@ -1,6 +1,6 @@
 # Figma Helper for Linux
 
-**Font Helper wrote in Deno**
+**Font Helper wrote on top of Deno**
 
 ## Prerequisites
 
